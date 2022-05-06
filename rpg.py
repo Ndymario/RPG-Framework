@@ -84,9 +84,15 @@ class Entity:
 
     def set_hp(self, hp):
         self._hp = hp
+        
+    def set_max_hp(self, hp):
+        self._max_hp = hp
     
     def set_sp(self, sp):
         self._sp = sp
+        
+    def set_max_sp(self, sp):
+        self._max_sp = sp
 
     def set_power(self, power):
         self._power = power
@@ -154,8 +160,12 @@ class Enemy(Entity):
             self.set_avatar(enemy_json["avatar"])
             self.set_level(random.randint(enemy_json["level_min"], enemy_json["level_max"]))
             self.set_exp(random.randint(enemy_json["exp_min"], enemy_json["exp_max"]))
-            self.set_hp(random.randint(enemy_json["hp_min"], enemy_json["hp_max"]))
-            self.set_sp(random.randint(enemy_json["sp_min"], enemy_json["sp_max"]))
+            hp = random.randint(enemy_json["hp_min"], enemy_json["hp_max"])
+            self.set_hp(hp)
+            self.set_max_hp(hp)
+            sp = random.randint(enemy_json["sp_min"], enemy_json["sp_max"])
+            self.set_sp(sp)
+            self.set_max_sp(sp)
             self.set_power(random.randint(enemy_json["power_min"], enemy_json["power_max"]))
             self.set_shield(random.randint(enemy_json["shield_min"], enemy_json["shield_max"]))
             self.set_spd(random.randint(enemy_json["speed_min"], enemy_json["speed_max"]))
