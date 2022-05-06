@@ -102,12 +102,15 @@ class Entity:
         
     def set_defeated(self, defeated):
         self._defeated = defeated
+        
+    def __str__(self):
+        return f"{self._name}: {self._level} | {self._hp}/{self._max_hp} | {self._sp}/{self._max_sp} | {self._power} | {self._shield} | {self._spd} | {self._lk}"
 
 class Player(Entity):
     # The default player stats
-    def __init__(self):
-        super().__init__("Player", None, 0, 1, 0, 100, 100, 10, 10, 10, 10, 10, False)
-        self._inventory = []
+    def __init__(self, name="Player", avatar="None", id=0, leve=1, exp=0, hp=100, sp=100, power=10, shield=10, spd=10, lk=10, defeated=False, inventory=[]):
+        super().__init__(name, avatar, id, leve, exp, hp, sp, power, shield, spd, lk, defeated)
+        self._inventory = inventory
 
     # Accessors
     def get_inventory(self):
@@ -119,10 +122,10 @@ class Player(Entity):
     
 class Enemy(Entity):
     # The default enemy stats
-    def __init__(self):
-        super().__init__("Enemy", None, 0, 1, 0, 100, 100, 10, 10, 10, 10, 10, False)
-        self._loot = []
-        self._moves = []
+    def __init__(self, name="Enemy", avatar="None", id=0, leve=1, exp=0, hp=100, sp=100, power=10, shield=10, spd=10, lk=10, defeated=False, loot=[], moves=[]):
+        super().__init__(name, avatar, id, leve, exp, hp, sp, power, shield, spd, lk, defeated)
+        self._loot = loot
+        self._moves = moves
 
     # Accessors
     def get_loot(self):
@@ -141,64 +144,58 @@ class Enemy(Entity):
     # Function that loads the stats of the passed enemy file
     def load_enemy(self, enemy_file):
         # Open the passed enemy JSON file
-        file = open(enemy_file, "r")
+        with open(enemy_file, "r") as file:
 
-        # Convert the JSON to a Python Dict
-        enemy_json = json.load(file)
+            # Convert the JSON to a Python Dict
+            enemy_json = json.load(file)
 
-        # Use some RNG and pick the stats
-        self.set_name(enemy_json["name"])
-        self.set_avatar(enemy_json["avatar"])
-        self.set_level(random.randint(enemy_json["level_min"], enemy_json["level_max"]))
-        self.set_exp(random.randint(enemy_json["exp_min"], enemy_json["exp_max"]))
-        self.set_hp(random.randint(enemy_json["hp_min"], enemy_json["hp_max"]))
-        self.set_sp(random.randint(enemy_json["sp_min"], enemy_json["sp_max"]))
-        self.set_power(random.randint(enemy_json["power_min"], enemy_json["power_max"]))
-        self.set_shield(random.randint(enemy_json["shield_min"], enemy_json["shield_max"]))
-        self.set_spd(random.randint(enemy_json["speed_min"], enemy_json["speed_max"]))
-        self.set_lk(random.randint(enemy_json["lk_min"], enemy_json["lk_max"]))
+            # Use some RNG and pick the stats
+            self.set_name(enemy_json["name"])
+            self.set_avatar(enemy_json["avatar"])
+            self.set_level(random.randint(enemy_json["level_min"], enemy_json["level_max"]))
+            self.set_exp(random.randint(enemy_json["exp_min"], enemy_json["exp_max"]))
+            self.set_hp(random.randint(enemy_json["hp_min"], enemy_json["hp_max"]))
+            self.set_sp(random.randint(enemy_json["sp_min"], enemy_json["sp_max"]))
+            self.set_power(random.randint(enemy_json["power_min"], enemy_json["power_max"]))
+            self.set_shield(random.randint(enemy_json["shield_min"], enemy_json["shield_max"]))
+            self.set_spd(random.randint(enemy_json["speed_min"], enemy_json["speed_max"]))
+            self.set_lk(random.randint(enemy_json["lk_min"], enemy_json["lk_max"]))
 
-        # Use some RNG to determine the loot for this enemy
-        chance = 80
-        common = random.randint(70, 100)
-        rare = random.randint(50, 100)
-        secret = random.randint(0, 80)
-        loot_pool = []
+            # Use some RNG to determine the loot for this enemy
+            chance = 80
+            common = random.randint(70, 100)
+            rare = random.randint(50, 100)
+            secret = random.randint(0, 80)
+            loot_pool = []
 
-        if(common >= chance):
-            loot_pool.append(enemy_json["loot"]["common"])
-        
-        if(rare >= chance):
-            loot_pool.append(enemy_json["loot"]["rare"])
-        
-        if(secret >= chance):
-            loot_pool.append(enemy_json["loot"]["secret"])
+            if(common >= chance):
+                loot_pool.append(enemy_json["loot"]["common"])
+            
+            if(rare >= chance):
+                loot_pool.append(enemy_json["loot"]["rare"])
+            
+            if(secret >= chance):
+                loot_pool.append(enemy_json["loot"]["secret"])
 
-        self.set_loot(loot_pool)
-    
-        # Close the file when done
-        file.close()
+            self.set_loot(loot_pool)
 
     # Funcion that selects moves this enemy will have based off the move pool
     def get_moves(self, enemy_type):
         # Open the move pool JSON file
-        file = open("games/rpg_files/enemy_files/move_pools.json", "r")
+        with open("./rpg_files/enemy_files/move_pools.json", "r") as file:
 
-        # Convert the JSON to a Python Dict
-        move_json = json.load(file)
+            # Convert the JSON to a Python Dict
+            move_json = json.load(file)
 
-        # Get move pool passed
-        move_pool = move_json[enemy_type]
+            # Get move pool passed
+            move_pool = move_json[enemy_type]
 
-        moves_to_assign = []
+            moves_to_assign = []
 
-        # Use some RNG to assign moves to this enemy
-        for move in move_pool:
-            if (random.randint(move["weight", 100])):
-                moves_to_assign.append(move)
-
-        # Close the file when done
-        file.close()
+            # Use some RNG to assign moves to this enemy
+            for move in move_pool:
+                if (random.randint(move["weight", 100]) >= (move["weight"] * 1.7)):
+                    moves_to_assign.append(move)
         
 class Battle():
     def __init__(self):
@@ -318,3 +315,7 @@ def battle_generator(*player_info, enemy_info, is_quest):
     '''
 
     return battle
+
+debug_enemy = Enemy()
+debug_enemy.load_enemy("./rpg_files/enemy_files/goblin.json")
+print(debug_enemy)
