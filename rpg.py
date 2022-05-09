@@ -295,37 +295,6 @@ class Battle():
 
         self.turn_number()
 
-def battle_generator(*player_info, enemy_info, is_quest):
-    battle = Battle()
-
-    # If this battle is part of a quest, load the enemies into the battle
-    if(is_quest):
-        for enemy in enemy_info:
-            battle.assign_entities(enemy)
-
-    '''
-    [TODO] - Make the battle generator more dynamic
-    # Convert the player information to be useable in the battle system,
-    #  then assign the player into the battle
-    for player in player_info:
-        new_player = Player()
-        new_player.set_name(player.name)
-        new_player.set_avatar(player.avatar_url)
-        new_player.set_id(player.id)
-        new_player.set_level(player.level)
-        new_player.set_exp(player.exp)
-        new_player.set_hp(player.hp)
-        new_player.set_sp(player.sp)
-        new_player.set_power(player.power)
-        new_player.set_shield(player.shield)
-        new_player.set_spd(player.spd)
-        new_player.set_lk(player.lk)
-        new_player.set_inventory(player.inventory)
-        battle.assign_entities(new_player)
-    '''
-
-    return battle
-
 debug_enemy = Enemy()
 debug_enemy.load_enemy("./rpg_files/enemy_files/goblin.json")
 print(debug_enemy)
