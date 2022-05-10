@@ -1,5 +1,5 @@
 #####################
-# RPG Framework. Made by Nolan Y.
+# RPG Framework. Made by Nolan Y. and Trisha C.
 #####################
 
 from math import ceil
