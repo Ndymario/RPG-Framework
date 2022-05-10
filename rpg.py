@@ -256,31 +256,31 @@ class Battle():
             self._turn_number = 0
         else:
             self._turn_number += 1
+    
+    # Define a helper function to calculate attack power based on the opponent's shield and the attacker's luck
+    def attack_power(atk_stats, tar_stats):
+        crit = False
+        lk_multiplier = 0.1
+        atk_multiplier = 0.2
+        shield_multiplier = 0.1
+        # First, lets determine if the attack is a crit or not
+        if (1 <= atk_stats[2]*(lk_multiplier)+(random.randint(0, 100))**2/10000):
+            crit = True
+
+        # Now, lets determine how much damage is being delt
+        damage_total = (atk_stats[1] * atk_multiplier) - (tar_stats[2] * shield_multiplier)
+        # Add a crit bonus if the entity recieved a crit
+        if (crit):
+            return ceil(damage_total + (damage_total * 0.4))
+        else:
+            return ceil(damage_total)
 
     def attack(self, attacker, target):
         # Get the ID & relevant stats of the attacker and target for finding their stats in the dictionary
         atk_stats = [attacker.get_id(), attacker.get_power(), attacker.get_lk()]
         tar_stats = [target.get_id(), target.get_hp(), target.get_shield()]
-
-        # Define a helper function to calculate attack power based on the opponent's shield and the attacker's luck
-        def attack_power(atk_stats, tar_stats):
-            crit = False
-            lk_multiplier = 0.1
-            atk_multiplier = 0.2
-            shield_multiplier = 0.1
-            # First, lets determine if the attack is a crit or not
-            if (1 <= atk_stats[2]*(lk_multiplier)+(random.randint(0, 100))**2/10000):
-                crit = True
-
-            # Now, lets determine how much damage is being delt
-            damage_total = (atk_stats[1] * atk_multiplier) - (tar_stats[2] * shield_multiplier)
-            # Add a crit bonus if the entity recieved a crit
-            if (crit):
-                return ceil(damage_total + (damage_total * 0.4))
-            else:
-                return ceil(damage_total)
         
-        damage = attack_power(atk_stats, tar_stats)
+        damage = self.attack_power(atk_stats, tar_stats)
 
         new_health = tar_stats[1] - damage
 
