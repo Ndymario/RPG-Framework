@@ -1,14 +1,26 @@
 {
     "story_1": {
-        "story_id": "story_1",
-        "story_title": "Story 1",
-        "story_description": "This is story 1",
-        "chapters":{
+        "battles": {
+            "enemy_json_path": "/path/to/enemy/json/folder/",
+            "battle_1": {
+                "battle_id": "battle_1",
+                "enemies": [
+                    "goblin.json"
+                ],
+                "exp_is_fixed": "True",
+                "fixed_exp": "100"
+            }
+        },
+        "chapters": {
             "chapter_1": {
                 "chapter_id": "chapter_1",
                 "chapter_title": "Chapter 1",
-                "chapter_description": "This is chapter 1"
+                "chapter_description": "This is chapter 1",
+                "battle_order": ["battle_1"]
             }
-        }
+        },
+        "story_description": "This is story 1",
+        "story_id": "story_1",
+        "story_title": "Story 1"
     }
 }
