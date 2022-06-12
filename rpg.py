@@ -311,6 +311,14 @@ class Battle:
         self.turn_number()
 
 
+'''[TODO]: Create class to handel parsing of Story files'''
+
+
+class Story:
+    def __int__(self):
+        pass
+
+
 debug_enemy = Enemy()
 debug_enemy.load_enemy("./rpg_files/enemy_files/goblin.json")
 print(debug_enemy)
